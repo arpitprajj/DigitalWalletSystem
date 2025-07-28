@@ -37,7 +37,7 @@ public class JwtService {
                 .getBody();
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username,Long userId) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())

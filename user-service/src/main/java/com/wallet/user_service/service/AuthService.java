@@ -9,6 +9,7 @@ import com.wallet.user_service.dto.RegisterRequest;
 import com.wallet.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.*;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.wallet.user_service.entity.User;
@@ -31,7 +32,7 @@ public class AuthService {
 
         repository.save(user);
 
-        String jwtToken = jwtService.generateToken(user.getEmail());
+        String jwtToken = jwtService.generateToken(user.getEmail(), user.getId());
         return new AuthResponse(jwtToken);
     }
 
@@ -39,8 +40,9 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
-
-        String jwtToken = jwtService.generateToken(request.getEmail());
+        User user = repository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        String jwtToken = jwtService.generateToken(request.getEmail(), user.getId());
         return new AuthResponse(jwtToken);
     }
 }
