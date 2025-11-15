@@ -14,14 +14,15 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "Transaction")
+@Document(collection = "transaction")
 public class Transaction {
     @Id
     private String id;
 
-    private String userId;
+    private Long userId;
     private String type;    // CREDIT / DEBIT
     private Double amount;
+    private String counterpartyUserId;
     private LocalDateTime timestamp;
 }
 
